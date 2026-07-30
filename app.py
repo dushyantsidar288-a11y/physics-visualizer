@@ -113,7 +113,34 @@ elif topic == "05. ABACAS Simulations":
     
     mat = st.selectbox("Select Material", ["Silicon (Si)", "Gallium Arsenide (GaAs)"])
     st.write(f"Calculating parameters for **{mat}** without relying on external web platforms...")
-    st.success("Simulation dashboard active. Drift-diffusion results will render below based on selected parameters.")
+    
+    # Material ke hisaab se asali parameters set karna
+    if mat == "Silicon (Si)":
+        mu_e, mu_h, Eg = 1400, 450, 1.12  # Mobility aur Bandgap
+        color = 'blue'
+    else:
+        mu_e, mu_h, Eg = 8500, 400, 1.42
+        color = 'green'
+        
+    st.success(f"Simulation dashboard active. {mat} Drift-diffusion results:")
+    
+    # Drift Velocity ka Graph Banane ki Calculation
+    E_field = np.linspace(0, 10000, 100) # Electric Field
+    v_drift_e = mu_e * E_field / 10000   # Electron drift (visual scaling)
+    v_drift_h = mu_h * E_field / 10000   # Hole drift (visual scaling)
+    
+    fig, ax = plt.subplots(figsize=(8, 4))
+    ax.plot(E_field, v_drift_e, label=f"Electron Drift", color=color, linewidth=2)
+    ax.plot(E_field, v_drift_h, label=f"Hole Drift", color='red', linestyle='--', linewidth=2)
+    
+    ax.set_title(f"Drift Velocity vs Electric Field (Bandgap = {Eg} eV)", fontweight="bold")
+    ax.set_xlabel("Electric Field (V/cm)")
+    ax.set_ylabel("Drift Velocity")
+    ax.grid(True, linestyle=':', alpha=0.7)
+    ax.legend()
+    
+    st.pyplot(fig)
+        
 
 # --- 06. EXAM PREP (NET / CG Pre B.Ed) ---
 elif topic == "06. NET & CG Pre B.Ed Exam Prep":
