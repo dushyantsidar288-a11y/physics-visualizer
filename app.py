@@ -3,8 +3,40 @@ import numpy as np
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
-# --- APP SETUP ---
+# --- APP SETUP & CUSTOM CSS STYLING ---
 st.set_page_config(page_title="Advanced Physics Pro", layout="wide")
+
+# Custom CSS injection for modern look, custom cards, and clean typography
+st.markdown("""
+    <style>
+    /* Main background and font styling */
+    .main {
+        background-color: #f8f9fa;
+    }
+    /* Sidebar styling */
+    [data-testid="stSidebar"] {
+        background-color: #1e1e2f;
+        color: white;
+    }
+    [data-testid="stSidebar"] label, [data-testid="stSidebar"] .stRadio div {
+        color: white !important;
+    }
+    /* Headers styling */
+    h1, h2, h3 {
+        color: #2c3e50;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    /* Custom Info / Theory card containers */
+    .theory-box {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border-left: 5px solid #4f46e5;
+        margin-bottom: 20px;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # --- SIDEBAR MENU (20 TOPICS) ---
 st.sidebar.title("📚 M.Sc. Physics Menu")
@@ -37,16 +69,25 @@ topic = st.sidebar.radio(
 # --- 01. HOME ---
 if topic == "01. Home / Dashboard":
     st.title("Advanced Physics Educational Platform")
-    st.write("Ye platform solid-state physics, crystallography, aur semiconductor electronics ke adhyayan ke liye banaya gaya hai.")
-    st.info("👈 Bayen taraf diye gaye menu se koi bhi topic chun kar uski vistarit theory aur interactive graph dekhein.")
+    st.markdown("""
+    <div class="theory-box">
+        <h3>Welcome to Physics Visualizer!</h3>
+        <p>Ye platform solid-state physics, crystallography, aur semiconductor electronics ke adhyayan aur interactive visualization ke liye banaya gaya hai.</p>
+        <p><b>👈 Bayen taraf diye gaye menu se koi bhi topic chun kar uski vistarit theory aur live graphs dekhein.</b></p>
+    </div>
+    """, unsafe_allow_html=True)
 
 # --- 02. P-N JUNCTION ---
 elif topic == "02. P-N Junction":
     st.title("Semiconductor P-N Junction")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("P-type aur N-type semiconductors ke milne se depletion region banta hai. Diffusion aur drift currents ke balance hone se built-in potential set hota hai.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>P-type aur N-type semiconductors ke milne se depletion region banta hai. Diffusion aur drift currents ke balance hone se built-in potential set hota hai.</p>
+        </div>
+        """, unsafe_allow_html=True)
         v_app = st.slider("Applied Voltage (V)", -2.0, 0.5, 0.0, 0.1)
     with col2:
         v0 = 0.7 
@@ -64,8 +105,12 @@ elif topic == "03. Fermi-Dirac Distribution":
     st.title("Fermi-Dirac Distribution")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("Fermions ke liye energy states me electrons ki probability occupation ko yeh function darshata hai: f(E) = 1 / (exp((E-EF)/kT) + 1)")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>Fermions ke liye energy states me electrons ki probability occupation ko yeh function darshata hai: f(E) = 1 / (exp((E-EF)/kT) + 1)</p>
+        </div>
+        """, unsafe_allow_html=True)
         T = st.slider("Temperature (K)", 0, 1000, 300, 50)
     with col2:
         E = np.linspace(0, 1, 500)
@@ -83,8 +128,12 @@ elif topic == "04. NaCl Crystal 3D Lattice":
     st.title("NaCl Crystal Structure (3D)")
     col1, col2 = st.columns([1, 1.5])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("Sodium Chloride ka lattice face-centered cubic structure me hota hai jisme Na+ aur Cl- ions alternate positions par sthit hote hain.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>Sodium Chloride ka lattice face-centered cubic structure me hota hai jisme Na+ aur Cl- ions alternate positions par sthit hote hain.</p>
+        </div>
+        """, unsafe_allow_html=True)
     with col2:
         x, y, z, color, size = [], [], [], [], []
         for i in range(3):
@@ -104,8 +153,12 @@ elif topic == "05. ABACAS Simulations":
     st.title("ABACAS Simulations")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("Semiconductor material transport properties aur drift velocity analysis module.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>Semiconductor material transport properties aur drift velocity analysis module.</p>
+        </div>
+        """, unsafe_allow_html=True)
         mat = st.selectbox("Select Material", ["Silicon (Si)", "Gallium Arsenide (GaAs)"])
     with col2:
         mu_e, mu_h, Eg = (1400, 450, 1.12) if mat == "Silicon (Si)" else (8500, 400, 1.42)
@@ -122,23 +175,31 @@ elif topic == "06. NET & CG Pre B.Ed Exam Prep":
     st.title("Exam Prep Module")
     col1, col2 = st.columns(2)
     with col1:
+        st.markdown("""<div class="theory-box">""", unsafe_allow_html=True)
         st.subheader("Physics Quiz")
         q1 = st.radio("At T=0K, probability above Fermi level?", ["1", "0.5", "0", "Infinity"])
         if st.button("Check Physics"):
             st.success("Correct!") if q1 == "0" else st.error("Incorrect.")
+        st.markdown("""</div>""", unsafe_allow_html=True)
     with col2:
+        st.markdown("""<div class="theory-box">""", unsafe_allow_html=True)
         st.subheader("B.Ed Quiz")
         q2 = st.radio("Learning me mehatvapurn:", ["Rattna", "Concept samajhna", "Shanti", "Exam"], key="b2")
         if st.button("Check B.Ed"):
             st.success("Sahi hai!") if q2 == "Concept samajhna" else st.error("Galat.")
+        st.markdown("""</div>""", unsafe_allow_html=True)
 
 # --- 07. BRAGG'S LAW ---
 elif topic == "07. Bragg's Law & XRD":
     st.title("Bragg's Law & XRD")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("X-ray diffraction ke liye 2d sin(theta) = n*lambda formula use hota hai.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>X-ray diffraction ke liye 2d sin(theta) = n*lambda formula use hota hai.</p>
+        </div>
+        """, unsafe_allow_html=True)
         lam = st.slider("Wavelength", 0.5, 2.0, 1.5)
         d = st.slider("Spacing d", 1.0, 5.0, 2.0)
     with col2:
@@ -158,8 +219,12 @@ elif topic == "08. Band Theory of Solids":
     st.title("Band Theory of Solids")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("Valence band aur Conduction band ke beech energy gap solid ki conductivity tay karta hai.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>Valence band aur Conduction band ke beech energy gap solid ki conductivity tay karta hai.</p>
+        </div>
+        """, unsafe_allow_html=True)
         mat_type = st.selectbox("Type", ["Insulator", "Semiconductor", "Conductor"])
     with col2:
         gap = 5.0 if mat_type == "Insulator" else (1.1 if mat_type == "Semiconductor" else 0.0)
@@ -173,8 +238,12 @@ elif topic == "09. Hall Effect":
     st.title("Hall Effect")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("Magnetic field aur current ke perpendicular transverse voltage (VH = I*B / t*n*q) generate hota hai.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>Magnetic field aur current ke perpendicular transverse voltage (VH = I*B / t*n*q) generate hota hai.</p>
+        </div>
+        """, unsafe_allow_html=True)
         B = st.slider("Magnetic Field B", 0.1, 5.0, 1.0)
         I = st.slider("Current I", 1.0, 100.0, 10.0)
     with col2:
@@ -190,8 +259,12 @@ elif topic == "10. Photovoltaic Effect":
     st.title("Photovoltaic Effect")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("Photons ke absorption se electron-hole pairs ban kar solar current generate karte hain.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>Photons ke absorption se electron-hole pairs ban kar solar current generate karte hain.</p>
+        </div>
+        """, unsafe_allow_html=True)
         light = st.slider("Light Intensity", 0.1, 2.0, 1.0)
     with col2:
         V = np.linspace(0, 0.6, 100)
@@ -206,8 +279,12 @@ elif topic == "11. Quantum Harmonic Oscillator":
     st.title("Quantum Harmonic Oscillator")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("Quantized energy levels En = (n + 1/2) hbar omega.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>Quantized energy levels En = (n + 1/2) hbar omega.</p>
+        </div>
+        """, unsafe_allow_html=True)
         n_state = st.slider("State n", 0, 5, 0)
     with col2:
         x = np.linspace(-4, 4, 400)
@@ -222,8 +299,12 @@ elif topic == "12. Heisenberg Uncertainty":
     st.title("Heisenberg Uncertainty")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("dx * dp >= hbar / 2 relation.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>dx * dp >= hbar / 2 relation.</p>
+        </div>
+        """, unsafe_allow_html=True)
         dx = st.slider("dx", 0.01, 1.0, 0.1)
     with col2:
         dp = 0.5 / dx
@@ -240,8 +321,12 @@ elif topic == "13. Maxwell-Boltzmann Stats":
     st.title("Maxwell-Boltzmann Stats")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("Classical particles energy distribution.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>Classical particles energy distribution.</p>
+        </div>
+        """, unsafe_allow_html=True)
         temp = st.slider("Temp (K)", 100, 1000, 300)
     with col2:
         v = np.linspace(0, 2000, 200)
@@ -256,8 +341,12 @@ elif topic == "14. Bose-Einstein Condensate":
     st.title("Bose-Einstein Condensate")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("Bosons collapse into lowest quantum state at low temperatures.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>Bosons collapse into lowest quantum state at low temperatures.</p>
+        </div>
+        """, unsafe_allow_html=True)
         T_bec = st.slider("T/Tc ratio", 0.0, 2.0, 0.5)
     with col2:
         frac = max(0.0, 1.0 - T_bec**1.5) if T_bec <= 1 else 0.0
@@ -271,8 +360,12 @@ elif topic == "15. Superconductivity":
     st.title("Superconductivity")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("Zero resistance and Meissner effect below critical temperature.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>Zero resistance and Meissner effect below critical temperature.</p>
+        </div>
+        """, unsafe_allow_html=True)
         T = st.slider("Temp (K)", 1, 20, 5)
     with col2:
         res = 0.0 if T < 9.2 else 1.0
@@ -286,8 +379,12 @@ elif topic == "16. Magnetic Hysteresis":
     st.title("Magnetic Hysteresis")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("Ferromagnetic B-H loop characteristics.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>Ferromagnetic B-H loop characteristics.</p>
+        </div>
+        """, unsafe_allow_html=True)
         c_fac = st.slider("Coercivity", 0.5, 2.0, 1.0)
     with col2:
         H = np.linspace(-5, 5, 200)
@@ -302,8 +399,12 @@ elif topic == "17. Crystal Defects":
     st.title("Crystal Defects")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("Real crystals me ideal periodicity nahi hoti. Inme point defects, line defects aur surface defects hote hain jo mechanical strength ko prabhavit karte hain.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>Real crystals me ideal periodicity nahi hoti. Inme point defects, line defects aur surface defects hote hain jo mechanical strength ko prabhavit karte hain.</p>
+        </div>
+        """, unsafe_allow_html=True)
         d_type = st.selectbox("Defect", ["Vacancy", "Interstitial", "Dislocation"])
     with col2:
         fig, ax = plt.subplots(figsize=(6, 4))
@@ -316,8 +417,12 @@ elif topic == "18. Phonons & Vibrations":
     st.title("Phonons & Vibrations")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("Collective lattice atomic vibrations.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>Collective lattice atomic vibrations.</p>
+        </div>
+        """, unsafe_allow_html=True)
         q = np.linspace(0, np.pi, 100)
     with col2:
         omega = 2 * np.sin(q / 2)
@@ -331,8 +436,12 @@ elif topic == "19. Raman Effect Visualizer":
     st.title("Raman Effect")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("Inelastic scattering producing Stokes and Anti-Stokes lines.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>Inelastic scattering producing Stokes and Anti-Stokes lines.</p>
+        </div>
+        """, unsafe_allow_html=True)
         shift = st.slider("Shift", 200, 1000, 500)
     with col2:
         x_s = np.linspace(-1500, 1500, 300)
@@ -347,8 +456,12 @@ elif topic == "20. Silicon vs GaAs Analysis":
     st.title("Silicon vs GaAs")
     col1, col2 = st.columns([1, 1.2])
     with col1:
-        st.subheader("Detailed Theory")
-        st.write("Indirect vs Direct bandgap comparison.")
+        st.markdown("""
+        <div class="theory-box">
+            <h3>Detailed Theory</h3>
+            <p>Indirect vs Direct bandgap comparison.</p>
+        </div>
+        """, unsafe_allow_html=True)
         prop = st.selectbox("Property", ["Bandgap", "Mobility"])
     with col2:
         val_si = 1.12 if prop == "Bandgap" else 1400
@@ -357,4 +470,4 @@ elif topic == "20. Silicon vs GaAs Analysis":
         ax.bar(["Silicon", "GaAs"], [val_si, val_gaas], color=['blue', 'green'], width=0.5)
         ax.set_title(f"Comparison: {prop}")
         st.pyplot(fig)
-    
+        
