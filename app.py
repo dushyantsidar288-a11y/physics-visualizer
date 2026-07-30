@@ -405,6 +405,6 @@ elif topic == "17. Crystal Defects":
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.subheader("📚 Detailed Theory")
-        st.write("""
+        st.write
         Real crystals me ideal periodicity nahi hoti. Inme point defects (vacancy, interstitial), line defects (dislocations), aur surface defects hote hain jo materials ki mechanical strength aur conductivity ko prabhavit karte hain.
         
