@@ -1,80 +1,95 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
-# App Setup
-st.set_page_config(page_title="Physics Visualizer", layout="wide")
+# App ka layout wide set karna taaki theory aur graph side-by-side acche dikhein
+st.set_page_config(page_title="P-N Junction App", layout="wide")
 
-# Sidebar Navigation
-st.sidebar.title("Physics Menu")
-st.sidebar.write("Select a topic below:")
-topic = st.sidebar.radio(
-    "Topics",
-    [
-        "Home", 
-        "1. Fermi-Dirac Distribution", 
-        "2. P-N Junction", 
-        "3. NaCl Crystal Growth",
-        "4. ABACAS Simulations"
-    ]
-)
+st.title("Semiconductor P-N Junction: Theory, Diagram & Visualization")
+st.markdown("---")
 
-# Home Page
-if topic == "Home":
-    st.title("Welcome to Physics Visualizer")
-    st.write("Interactive visualizations for solid-state and semiconductor physics.")
-    st.info("👈 Left side menu se koi bhi topic select karein.")
+# Screen ko do hisson me baantna (Left me theory, Right me visuals)
+col1, col2 = st.columns([1, 1.2]) 
 
-# Topic 1: Fermi-Dirac
-elif topic == "1. Fermi-Dirac Distribution":
-    st.title("Fermi-Dirac Distribution")
-    st.write("Energy state probabilities at different temperatures.")
+with col1:
+    st.subheader("📚 Theory (Siddhant)")
+    st.write('''
+    **1. P-Type aur N-Type Semiconductor:**
+    Jab ek P-type (jisme positive 'Holes' zyada hote hain) aur N-type (jisme negative 'Electrons' zyada hote hain) material ko ek sath joda jata hai, toh P-N junction banta hai.
+
+    **2. Depletion Region (Kshaya Kshetra):**
+    Junction ke bilkul paas, electrons aur holes ek dusre se mil kar neutralize ho jate hain. Is wajah se beech me ek aisi jagah banti hai jahan koi free charge carrier nahi hota. Ise *Depletion Region* kehte hain.
+
+    **3. Biasing (Voltage) ka Asar:**
+    - **Forward Bias (+V):** Jab positive voltage lagate hain, toh Depletion region patla (narrow) ho jata hai aur Potential barrier chota ho jata hai, jisse current asani se behta hai.
+    - **Reverse Bias (-V):** Jab negative voltage lagate hain, toh Depletion region aur chauda (wide) ho jata hai aur barrier badh jata hai, jo current ko rokta hai.
+    ''')
     
-    T = st.slider("Temperature (Kelvin)", min_value=0, max_value=1000, value=300, step=50)
+    st.info("👇 Niche diye gaye slider se Voltage badal kar dekhein ki Diagram (Depletion width) aur Graph (Barrier height) me live kya badlav aata hai!")
     
-    k = 8.617e-5  
-    E_f = 0.5     
-    E = np.linspace(0, 1, 500)
+    # Interactive Slider
+    V_app = st.slider("Applied Voltage (V) [Biasing]", min_value=-2.0, max_value=0.5, value=0.0, step=0.1)
+
+with col2:
+    # Calculations based on applied voltage
+    V0 = 0.7 # Silicon ke liye Built-in potential lagbhag 0.7V hota hai
+    barrier = max(0.05, V0 - V_app)
+    # Depletion width (W) voltage ke hisaab se badalti hai
+    W = np.sqrt(barrier / V0) * 2 
+
+    st.subheader("📊 Diagram & Graph Visualization")
     
-    if T == 0:
-        f_E = np.where(E <= E_f, 1.0, 0.0)
-    else:
-        f_E = 1 / (np.exp((E - E_f) / (k * T)) + 1)
-        
-    fig, ax = plt.subplots(figsize=(8, 4))
-    ax.plot(E, f_E, color='blue', linewidth=2)
-    ax.set_title(f"Fermi-Dirac Function at T = {T} K")
-    ax.set_xlabel("Energy (eV)")
-    ax.set_ylabel("Probability f(E)")
-    ax.axvline(x=E_f, color='red', linestyle='--', label="Fermi Energy")
-    ax.grid(True)
-    ax.legend()
+    # Ek hi figure me 2 hisse banana (Upar Diagram, Niche Graph)
+    fig, (ax_diag, ax_graph) = plt.subplots(2, 1, figsize=(8, 6), gridspec_kw={'height_ratios': [1, 2]})
+
+    # --- 1. SCHEMATIC BLOCK DIAGRAM ---
+    ax_diag.axis('off') # Diagram ke borders chhupane ke liye
+    ax_diag.set_xlim(-5, 5)
+    ax_diag.set_ylim(0, 2)
+
+    # P-Region (Blue)
+    ax_diag.add_patch(patches.Rectangle((-5, 0), 5-W/2, 2, facecolor='#add8e6', edgecolor='black'))
+    ax_diag.text(-2.5 - W/4, 1, 'P-Type\n(Holes +)', ha='center', va='center', fontsize=12, fontweight='bold')
+
+    # N-Region (Red)
+    ax_diag.add_patch(patches.Rectangle((W/2, 0), 5-W/2, 2, facecolor='#ffcccb', edgecolor='black'))
+    ax_diag.text(2.5 + W/4, 1, 'N-Type\n(Electrons -)', ha='center', va='center', fontsize=12, fontweight='bold')
+
+    # Depletion Region (Grey with pattern)
+    ax_diag.add_patch(patches.Rectangle((-W/2, 0), W, 2, facecolor='#d3d3d3', edgecolor='black', hatch='//'))
+    ax_diag.text(0, 1, 'Depletion\nRegion', ha='center', va='center', fontsize=10)
+    ax_diag.set_title("P-N Junction Physical Diagram", fontweight="bold")
+
+    # --- 2. POTENTIAL BARRIER GRAPH ---
+    x = np.linspace(-5, 5, 500)
+    potential = np.zeros_like(x)
+    
+    # Graph ka curve banane ke liye calculation
+    for i, pos in enumerate(x):
+        if pos < -W/2:
+            potential[i] = 0
+        elif pos > W/2:
+            potential[i] = barrier
+        else:
+            normalized_pos = (pos - (-W/2)) / W
+            potential[i] = barrier * (0.5 - 0.5 * np.cos(np.pi * normalized_pos))
+
+    # Graph Plot karna
+    ax_graph.plot(x, potential, color='purple', linewidth=3)
+    ax_graph.fill_between(x, 0, potential, color='purple', alpha=0.1)
+    ax_graph.set_title("Potential Barrier (Energy) Graph", fontweight="bold")
+    ax_graph.set_xlabel("Position (x)")
+    ax_graph.set_ylabel("Potential / Energy Barrier")
+    ax_graph.set_xlim(-5, 5)
+    ax_graph.set_ylim(-0.2, 3.0)
+    
+    # Depletion region ki boundaries ko dotted line se dikhana
+    ax_graph.axvline(x=-W/2, color='gray', linestyle='--')
+    ax_graph.axvline(x=W/2, color='gray', linestyle='--')
+    ax_graph.grid(True, linestyle=':', alpha=0.6)
+
+    plt.tight_layout()
+    
+    # Streamlit me figure ko dikhana
     st.pyplot(fig)
-
-# Topic 2: P-N Junction
-elif topic == "2. P-N Junction":
-    st.title("Semiconductor P-N Junction")
-    st.write("Drift-diffusion characteristics and built-in potential.")
-    
-    x = np.linspace(-5, 5, 400)
-    potential = 0.5 * (np.tanh(x) + 1)
-    
-    fig, ax = plt.subplots(figsize=(8, 4))
-    ax.plot(x, potential, color='purple', linewidth=2)
-    ax.set_title("Built-in Potential")
-    ax.set_xlabel("Position")
-    ax.set_ylabel("Potential (V)")
-    ax.grid(True)
-    st.pyplot(fig)
-
-# Topic 3: NaCl Crystal Growth
-elif topic == "3. NaCl Crystal Growth":
-    st.title("NaCl Crystal Growth")
-    st.write("Visualization of the sodium chloride crystal lattice arrangement.")
-    st.info("The atomic arrangement forms a continuous and repeating crystal structure.")
-
-# Topic 4: ABACAS
-elif topic == "4. ABACAS Simulations":
-    st.title("ABACAS")
-    st.subheader("assembly of basic application coordinated understanding the semiconductor")
-    st.write("Advanced semiconductor material simulations and parameter configuration.")
