@@ -3,88 +3,128 @@ import numpy as np
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
-# --- APP SETUP & CUSTOM CSS STYLING ---
-st.set_page_config(page_title="Advanced Physics Pro", layout="wide")
+# --- APP SETUP & VISUAL PHYSICS STYLE CSS ---
+st.set_page_config(page_title="Visual Physics Pro", layout="wide")
 
-# Custom CSS injection for modern look, custom cards, and clean typography
 st.markdown("""
     <style>
-    /* Main background and font styling */
+    /* Global Background */
     .main {
-        background-color: #f8f9fa;
+        background-color: #f4f6f9;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
-    /* Sidebar styling */
+    /* Sidebar Styling */
     [data-testid="stSidebar"] {
-        background-color: #1e1e2f;
+        background-color: #111827;
         color: white;
     }
     [data-testid="stSidebar"] label, [data-testid="stSidebar"] .stRadio div {
         color: white !important;
     }
-    /* Headers styling */
-    h1, h2, h3 {
-        color: #2c3e50;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    /* Custom Info / Theory card containers */
-    .theory-box {
-        background-color: #ffffff;
+    /* Modern Card Container */
+    .visual-card {
+        background: #ffffff;
         padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        border-left: 5px solid #4f46e5;
+        border-radius: 14px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border: 1px solid #e5e7eb;
         margin-bottom: 20px;
+        transition: transform 0.2s ease;
+    }
+    .visual-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+    /* Header Title Style */
+    .app-header {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 5px;
+    }
+    .app-subtitle {
+        font-size: 15px;
+        color: #6b7280;
+        margin-bottom: 25px;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# --- SIDEBAR MENU (20 TOPICS) ---
-st.sidebar.title("📚 M.Sc. Physics Menu")
-topic = st.sidebar.radio(
-    "Select Topic:",
-    [
-        "01. Home / Dashboard",
-        "02. P-N Junction",
-        "03. Fermi-Dirac Distribution",
-        "04. NaCl Crystal 3D Lattice",
-        "05. ABACAS Simulations",
-        "06. NET & CG Pre B.Ed Exam Prep",
-        "07. Bragg's Law & XRD",
-        "08. Band Theory of Solids",
-        "09. Hall Effect",
-        "10. Photovoltaic Effect",
-        "11. Quantum Harmonic Oscillator",
-        "12. Heisenberg Uncertainty",
-        "13. Maxwell-Boltzmann Stats",
-        "14. Bose-Einstein Condensate",
-        "15. Superconductivity",
-        "16. Magnetic Hysteresis",
-        "17. Crystal Defects",
-        "18. Phonons & Vibrations",
-        "19. Raman Effect Visualizer",
-        "20. Silicon vs GaAs Analysis"
-    ]
-)
+# --- TOPICS LIST ---
+topics_list = [
+    "01. Home / Dashboard",
+    "02. P-N Junction",
+    "03. Fermi-Dirac Distribution",
+    "04. NaCl Crystal 3D Lattice",
+    "05. ABACAS Simulations",
+    "06. NET & CG Pre B.Ed Exam Prep",
+    "07. Bragg's Law & XRD",
+    "08. Band Theory of Solids",
+    "09. Hall Effect",
+    "10. Photovoltaic Effect",
+    "11. Quantum Harmonic Oscillator",
+    "12. Heisenberg Uncertainty",
+    "13. Maxwell-Boltzmann Stats",
+    "14. Bose-Einstein Condensate",
+    "15. Superconductivity",
+    "16. Magnetic Hysteresis",
+    "17. Crystal Defects",
+    "18. Phonons & Vibrations",
+    "19. Raman Effect Visualizer",
+    "20. Silicon vs GaAs Analysis"
+]
 
-# --- 01. HOME ---
+# --- SIDEBAR NAVIGATION ---
+st.sidebar.title("⚡ Physics Chapters")
+topic = st.sidebar.radio("Select Topic:", topics_list)
+
+# --- 01. HOME / DASHBOARD (Visual Physics Style) ---
 if topic == "01. Home / Dashboard":
-    st.title("Advanced Physics Educational Platform")
-    st.markdown("""
-    <div class="theory-box">
-        <h3>Welcome to Physics Visualizer!</h3>
-        <p>Ye platform solid-state physics, crystallography, aur semiconductor electronics ke adhyayan aur interactive visualization ke liye banaya gaya hai.</p>
-        <p><b>👈 Bayen taraf diye gaye menu se koi bhi topic chun kar uski vistarit theory aur live graphs dekhein.</b></p>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown('<p class="app-header">Welcome to Visual Physics!</p>', unsafe_allow_html=True)
+    st.markdown('<p class="app-subtitle">Get crystal clear concepts with powerful visualization and in-depth discussion.</p>', unsafe_allow_html=True)
+    
+    # Search bar feature
+    search_query = st.text_input("🔍 Search physics topic...", "")
+    
+    st.markdown("### 🔥 Popular Visual Chapters")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown("""
+        <div class="visual-card">
+            <h4>P-N Junction</h4>
+            <p>Drift & Diffusion current dynamics inside semiconductor junctions.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    with col2:
+        st.markdown("""
+        <div class="visual-card">
+            <h4>NaCl 3D Lattice</h4>
+            <p>Interactive 3D crystal structure and ionic bonding visualization.</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+    with col3:
+        st.markdown("""
+        <div class="visual-card">
+            <h4>Bragg's Law & XRD</h4>
+            <p>X-ray diffraction peaks and interplanar spacing analysis.</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("---")
+    st.info("👈 Apne pasand ka topic select karne ke liye left sidebar menu ka upyog karein.")
 
 # --- 02. P-N JUNCTION ---
 elif topic == "02. P-N Junction":
-    st.title("Semiconductor P-N Junction")
+    st.markdown('<p class="app-header">Semiconductor P-N Junction</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>P-type aur N-type semiconductors ke milne se depletion region banta hai. Diffusion aur drift currents ke balance hone se built-in potential set hota hai.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -102,12 +142,12 @@ elif topic == "02. P-N Junction":
 
 # --- 03. FERMI-DIRAC ---
 elif topic == "03. Fermi-Dirac Distribution":
-    st.title("Fermi-Dirac Distribution")
+    st.markdown('<p class="app-header">Fermi-Dirac Distribution</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>Fermions ke liye energy states me electrons ki probability occupation ko yeh function darshata hai: f(E) = 1 / (exp((E-EF)/kT) + 1)</p>
         </div>
         """, unsafe_allow_html=True)
@@ -125,12 +165,12 @@ elif topic == "03. Fermi-Dirac Distribution":
 
 # --- 04. NaCl CRYSTAL ---
 elif topic == "04. NaCl Crystal 3D Lattice":
-    st.title("NaCl Crystal Structure (3D)")
+    st.markdown('<p class="app-header">NaCl Crystal Structure (3D)</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.5])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>Sodium Chloride ka lattice face-centered cubic structure me hota hai jisme Na+ aur Cl- ions alternate positions par sthit hote hain.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -150,12 +190,12 @@ elif topic == "04. NaCl Crystal 3D Lattice":
 
 # --- 05. ABACAS ---
 elif topic == "05. ABACAS Simulations":
-    st.title("ABACAS Simulations")
+    st.markdown('<p class="app-header">ABACAS Simulations</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>Semiconductor material transport properties aur drift velocity analysis module.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -172,17 +212,17 @@ elif topic == "05. ABACAS Simulations":
 
 # --- 06. EXAM PREP ---
 elif topic == "06. NET & CG Pre B.Ed Exam Prep":
-    st.title("Exam Prep Module")
+    st.markdown('<p class="app-header">Exam Prep Module</p>', unsafe_allow_html=True)
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("""<div class="theory-box">""", unsafe_allow_html=True)
+        st.markdown("""<div class="visual-card">""", unsafe_allow_html=True)
         st.subheader("Physics Quiz")
         q1 = st.radio("At T=0K, probability above Fermi level?", ["1", "0.5", "0", "Infinity"])
         if st.button("Check Physics"):
             st.success("Correct!") if q1 == "0" else st.error("Incorrect.")
         st.markdown("""</div>""", unsafe_allow_html=True)
     with col2:
-        st.markdown("""<div class="theory-box">""", unsafe_allow_html=True)
+        st.markdown("""<div class="visual-card">""", unsafe_allow_html=True)
         st.subheader("B.Ed Quiz")
         q2 = st.radio("Learning me mehatvapurn:", ["Rattna", "Concept samajhna", "Shanti", "Exam"], key="b2")
         if st.button("Check B.Ed"):
@@ -191,12 +231,12 @@ elif topic == "06. NET & CG Pre B.Ed Exam Prep":
 
 # --- 07. BRAGG'S LAW ---
 elif topic == "07. Bragg's Law & XRD":
-    st.title("Bragg's Law & XRD")
+    st.markdown('<p class="app-header">Bragg\'s Law & XRD</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>X-ray diffraction ke liye 2d sin(theta) = n*lambda formula use hota hai.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -216,12 +256,12 @@ elif topic == "07. Bragg's Law & XRD":
 
 # --- 08. BAND THEORY ---
 elif topic == "08. Band Theory of Solids":
-    st.title("Band Theory of Solids")
+    st.markdown('<p class="app-header">Band Theory of Solids</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>Valence band aur Conduction band ke beech energy gap solid ki conductivity tay karta hai.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -235,12 +275,12 @@ elif topic == "08. Band Theory of Solids":
 
 # --- 09. HALL EFFECT ---
 elif topic == "09. Hall Effect":
-    st.title("Hall Effect")
+    st.markdown('<p class="app-header">Hall Effect</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>Magnetic field aur current ke perpendicular transverse voltage (VH = I*B / t*n*q) generate hota hai.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -256,12 +296,12 @@ elif topic == "09. Hall Effect":
 
 # --- 10. PHOTOVOLTAIC EFFECT ---
 elif topic == "10. Photovoltaic Effect":
-    st.title("Photovoltaic Effect")
+    st.markdown('<p class="app-header">Photovoltaic Effect</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>Photons ke absorption se electron-hole pairs ban kar solar current generate karte hain.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -276,12 +316,12 @@ elif topic == "10. Photovoltaic Effect":
 
 # --- 11. QUANTUM HARMONIC OSCILLATOR ---
 elif topic == "11. Quantum Harmonic Oscillator":
-    st.title("Quantum Harmonic Oscillator")
+    st.markdown('<p class="app-header">Quantum Harmonic Oscillator</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>Quantized energy levels En = (n + 1/2) hbar omega.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -296,12 +336,12 @@ elif topic == "11. Quantum Harmonic Oscillator":
 
 # --- 12. HEISENBERG UNCERTAINTY ---
 elif topic == "12. Heisenberg Uncertainty":
-    st.title("Heisenberg Uncertainty")
+    st.markdown('<p class="app-header">Heisenberg Uncertainty</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>dx * dp >= hbar / 2 relation.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -318,12 +358,12 @@ elif topic == "12. Heisenberg Uncertainty":
 
 # --- 13. MAXWELL-BOLTZMANN STATS ---
 elif topic == "13. Maxwell-Boltzmann Stats":
-    st.title("Maxwell-Boltzmann Stats")
+    st.markdown('<p class="app-header">Maxwell-Boltzmann Stats</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>Classical particles energy distribution.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -338,12 +378,12 @@ elif topic == "13. Maxwell-Boltzmann Stats":
 
 # --- 14. BOSE-EINSTEIN CONDENSATE ---
 elif topic == "14. Bose-Einstein Condensate":
-    st.title("Bose-Einstein Condensate")
+    st.markdown('<p class="app-header">Bose-Einstein Condensate</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>Bosons collapse into lowest quantum state at low temperatures.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -357,12 +397,12 @@ elif topic == "14. Bose-Einstein Condensate":
 
 # --- 15. SUPERCONDUCTIVITY ---
 elif topic == "15. Superconductivity":
-    st.title("Superconductivity")
+    st.markdown('<p class="app-header">Superconductivity</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>Zero resistance and Meissner effect below critical temperature.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -376,12 +416,12 @@ elif topic == "15. Superconductivity":
 
 # --- 16. MAGNETIC HYSTERESIS ---
 elif topic == "16. Magnetic Hysteresis":
-    st.title("Magnetic Hysteresis")
+    st.markdown('<p class="app-header">Magnetic Hysteresis</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>Ferromagnetic B-H loop characteristics.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -396,12 +436,12 @@ elif topic == "16. Magnetic Hysteresis":
 
 # --- 17. CRYSTAL DEFECTS ---
 elif topic == "17. Crystal Defects":
-    st.title("Crystal Defects")
+    st.markdown('<p class="app-header">Crystal Defects</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>Real crystals me ideal periodicity nahi hoti. Inme point defects, line defects aur surface defects hote hain jo mechanical strength ko prabhavit karte hain.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -414,12 +454,12 @@ elif topic == "17. Crystal Defects":
 
 # --- 18. PHONONS & VIBRATIONS ---
 elif topic == "18. Phonons & Vibrations":
-    st.title("Phonons & Vibrations")
+    st.markdown('<p class="app-header">Phonons & Vibrations</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>Collective lattice atomic vibrations.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -433,12 +473,12 @@ elif topic == "18. Phonons & Vibrations":
 
 # --- 19. RAMAN EFFECT VISUALIZER ---
 elif topic == "19. Raman Effect Visualizer":
-    st.title("Raman Effect")
+    st.markdown('<p class="app-header">Raman Effect</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>Inelastic scattering producing Stokes and Anti-Stokes lines.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -453,12 +493,12 @@ elif topic == "19. Raman Effect Visualizer":
 
 # --- 20. SILICON VS GaAs ANALYSIS ---
 elif topic == "20. Silicon vs GaAs Analysis":
-    st.title("Silicon vs GaAs")
+    st.markdown('<p class="app-header">Silicon vs GaAs</p>', unsafe_allow_html=True)
     col1, col2 = st.columns([1, 1.2])
     with col1:
         st.markdown("""
-        <div class="theory-box">
-            <h3>Detailed Theory</h3>
+        <div class="visual-card">
+            <h4>Detailed Theory</h4>
             <p>Indirect vs Direct bandgap comparison.</p>
         </div>
         """, unsafe_allow_html=True)
@@ -470,4 +510,3 @@ elif topic == "20. Silicon vs GaAs Analysis":
         ax.bar(["Silicon", "GaAs"], [val_si, val_gaas], color=['blue', 'green'], width=0.5)
         ax.set_title(f"Comparison: {prop}")
         st.pyplot(fig)
-        
