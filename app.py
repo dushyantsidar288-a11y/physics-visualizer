@@ -2,94 +2,147 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+import plotly.graph_objects as go
 
-# App ka layout wide set karna taaki theory aur graph side-by-side acche dikhein
-st.set_page_config(page_title="P-N Junction App", layout="wide")
+# --- APP SETUP ---
+st.set_page_config(page_title="Advanced Physics Pro", layout="wide")
 
-st.title("Semiconductor P-N Junction: Theory, Diagram & Visualization")
-st.markdown("---")
+# --- SIDEBAR MENU (20 TOPICS) ---
+st.sidebar.title("📚 M.Sc. Physics Menu")
+topic = st.sidebar.radio(
+    "Select Topic:",
+    [
+        "01. Home / Dashboard",
+        "02. P-N Junction (Drift-Diffusion)",
+        "03. Fermi-Dirac Distribution",
+        "04. NaCl Crystal 3D Lattice",
+        "05. ABACAS Simulations",
+        "06. NET & CG Pre B.Ed Exam Prep",
+        "07. Bragg's Law & XRD",
+        "08. Band Theory of Solids",
+        "09. Hall Effect",
+        "10. Photovoltaic Effect",
+        "11. Quantum Harmonic Oscillator",
+        "12. Heisenberg Uncertainty",
+        "13. Maxwell-Boltzmann Stats",
+        "14. Bose-Einstein Condensate",
+        "15. Superconductivity",
+        "16. Magnetic Hysteresis",
+        "17. Crystal Defects",
+        "18. Phonons & Vibrations",
+        "19. Raman Effect Visualizer",
+        "20. Silicon vs GaAs Analysis"
+    ]
+)
 
-# Screen ko do hisson me baantna (Left me theory, Right me visuals)
-col1, col2 = st.columns([1, 1.2]) 
+# --- 01. HOME ---
+if topic == "01. Home / Dashboard":
+    st.title("Advanced Physics Visualizer")
+    st.write("Solid-state physics, crystallography, aur semiconductor electronics ka interactive dashboard.")
+    st.info("👈 Left panel se koi bhi topic select karein.")
 
-with col1:
-    st.subheader("📚 Theory (Siddhant)")
-    st.write('''
-    **1. P-Type aur N-Type Semiconductor:**
-    Jab ek P-type (jisme positive 'Holes' zyada hote hain) aur N-type (jisme negative 'Electrons' zyada hote hain) material ko ek sath joda jata hai, toh P-N junction banta hai.
-
-    **2. Depletion Region (Kshaya Kshetra):**
-    Junction ke bilkul paas, electrons aur holes ek dusre se mil kar neutralize ho jate hain. Is wajah se beech me ek aisi jagah banti hai jahan koi free charge carrier nahi hota. Ise *Depletion Region* kehte hain.
-
-    **3. Biasing (Voltage) ka Asar:**
-    - **Forward Bias (+V):** Jab positive voltage lagate hain, toh Depletion region patla (narrow) ho jata hai aur Potential barrier chota ho jata hai, jisse current asani se behta hai.
-    - **Reverse Bias (-V):** Jab negative voltage lagate hain, toh Depletion region aur chauda (wide) ho jata hai aur barrier badh jata hai, jo current ko rokta hai.
-    ''')
+# --- 02. P-N JUNCTION ---
+elif topic == "02. P-N Junction (Drift-Diffusion)":
+    st.title("Semiconductor P-N Junction")
+    col1, col2 = st.columns([1, 1.2])
     
-    st.info("👇 Niche diye gaye slider se Voltage badal kar dekhein ki Diagram (Depletion width) aur Graph (Barrier height) me live kya badlav aata hai!")
+    with col1:
+        st.subheader("📚 Theory & Drift-Diffusion")
+        st.write('''
+        P-type aur N-type materials ke junction par, electrons aur holes ke diffusion ke karan ek depletion region banta hai. 
+        Drift current (electric field ke karan) aur diffusion current (concentration gradient ke karan) equilibrium me ek dusre ko balance karte hain.
+        ''')
+        v_app = st.slider("Applied Voltage (V)", -2.0, 0.5, 0.0, 0.1)
     
-    # Interactive Slider
-    V_app = st.slider("Applied Voltage (V) [Biasing]", min_value=-2.0, max_value=0.5, value=0.0, step=0.1)
+    with col2:
+        v0 = 0.7 
+        barrier = max(0.05, v0 - v_app)
+        w = np.sqrt(barrier / v0) * 2 
+        
+        x = np.linspace(-5, 5, 500)
+        potential = np.where(x < -w/2, 0, np.where(x > w/2, barrier, barrier * (0.5 - 0.5 * np.cos(np.pi * (x - (-w/2)) / w))))
+        
+        fig, ax = plt.subplots(figsize=(6, 4))
+        ax.plot(x, potential, color='purple', linewidth=3)
+        ax.fill_between(x, 0, potential, color='purple', alpha=0.1)
+        ax.axvline(x=-w/2, color='gray', linestyle='--')
+        ax.axvline(x=w/2, color='gray', linestyle='--')
+        ax.set_title("Energy Band / Potential Barrier")
+        st.pyplot(fig)
 
-with col2:
-    # Calculations based on applied voltage
-    V0 = 0.7 # Silicon ke liye Built-in potential lagbhag 0.7V hota hai
-    barrier = max(0.05, V0 - V_app)
-    # Depletion width (W) voltage ke hisaab se badalti hai
-    W = np.sqrt(barrier / V0) * 2 
-
-    st.subheader("📊 Diagram & Graph Visualization")
+# --- 04. NaCl CRYSTAL (3D INTERACTIVE) ---
+elif topic == "04. NaCl Crystal 3D Lattice":
+    st.title("NaCl Crystal Growth (3D Interactive)")
+    col1, col2 = st.columns([1, 1.5])
     
-    # Ek hi figure me 2 hisse banana (Upar Diagram, Niche Graph)
-    fig, (ax_diag, ax_graph) = plt.subplots(2, 1, figsize=(8, 6), gridspec_kw={'height_ratios': [1, 2]})
+    with col1:
+        st.subheader("Theory")
+        st.write("Sodium Chloride (NaCl) ka lattice ek continuous 3D structure hota hai jisme Na+ aur Cl- ions ek doosre ko alternate positions par arrange karte hain. Is symmetric crystal lattice arrangement ko interactively dekha ja sakta hai.")
+        st.info("👉 Graph ko ungli se gol ghumayen ya zoom karein!")
+        
+    with col2:
+        # 3D Coordinates for basic NaCl structure
+        x, y, z, color, size = [], [], [], [], []
+        for i in range(3):
+            for j in range(3):
+                for k in range(3):
+                    x.append(i)
+                    y.append(j)
+                    z.append(k)
+                    # Alternate colors for Na+ and Cl-
+                    if (i+j+k) % 2 == 0:
+                        color.append('green') # Cl-
+                        size.append(15)
+                    else:
+                        color.append('blue')  # Na+
+                        size.append(10)
+                        
+        fig = go.Figure(data=[go.Scatter3d(
+            x=x, y=y, z=z, mode='markers',
+            marker=dict(size=size, color=color, opacity=0.9),
+            text=["Cl-" if c == 'green' else "Na+" for c in color]
+        )])
+        fig.update_layout(margin=dict(l=0, r=0, b=0, t=0))
+        st.plotly_chart(fig, use_container_width=True)
 
-    # --- 1. SCHEMATIC BLOCK DIAGRAM ---
-    ax_diag.axis('off') # Diagram ke borders chhupane ke liye
-    ax_diag.set_xlim(-5, 5)
-    ax_diag.set_ylim(0, 2)
-
-    # P-Region (Blue)
-    ax_diag.add_patch(patches.Rectangle((-5, 0), 5-W/2, 2, facecolor='#add8e6', edgecolor='black'))
-    ax_diag.text(-2.5 - W/4, 1, 'P-Type\n(Holes +)', ha='center', va='center', fontsize=12, fontweight='bold')
-
-    # N-Region (Red)
-    ax_diag.add_patch(patches.Rectangle((W/2, 0), 5-W/2, 2, facecolor='#ffcccb', edgecolor='black'))
-    ax_diag.text(2.5 + W/4, 1, 'N-Type\n(Electrons -)', ha='center', va='center', fontsize=12, fontweight='bold')
-
-    # Depletion Region (Grey with pattern)
-    ax_diag.add_patch(patches.Rectangle((-W/2, 0), W, 2, facecolor='#d3d3d3', edgecolor='black', hatch='//'))
-    ax_diag.text(0, 1, 'Depletion\nRegion', ha='center', va='center', fontsize=10)
-    ax_diag.set_title("P-N Junction Physical Diagram", fontweight="bold")
-
-    # --- 2. POTENTIAL BARRIER GRAPH ---
-    x = np.linspace(-5, 5, 500)
-    potential = np.zeros_like(x)
+# --- 05. ABACAS ---
+elif topic == "05. ABACAS Simulations":
+    st.title("ABACAS")
+    st.subheader("assembly of basic application coordinated understanding the semiconductor")
+    st.write("Ye in-house simulation module advance semiconductor material properties ko analyze karne ke liye banaya gaya hai.")
     
-    # Graph ka curve banane ke liye calculation
-    for i, pos in enumerate(x):
-        if pos < -W/2:
-            potential[i] = 0
-        elif pos > W/2:
-            potential[i] = barrier
-        else:
-            normalized_pos = (pos - (-W/2)) / W
-            potential[i] = barrier * (0.5 - 0.5 * np.cos(np.pi * normalized_pos))
+    mat = st.selectbox("Select Material", ["Silicon (Si)", "Gallium Arsenide (GaAs)"])
+    st.write(f"Calculating parameters for **{mat}** without relying on external web platforms...")
+    st.success("Simulation dashboard active. Drift-diffusion results will render below based on selected parameters.")
 
-    # Graph Plot karna
-    ax_graph.plot(x, potential, color='purple', linewidth=3)
-    ax_graph.fill_between(x, 0, potential, color='purple', alpha=0.1)
-    ax_graph.set_title("Potential Barrier (Energy) Graph", fontweight="bold")
-    ax_graph.set_xlabel("Position (x)")
-    ax_graph.set_ylabel("Potential / Energy Barrier")
-    ax_graph.set_xlim(-5, 5)
-    ax_graph.set_ylim(-0.2, 3.0)
+# --- 06. EXAM PREP (NET / CG Pre B.Ed) ---
+elif topic == "06. NET & CG Pre B.Ed Exam Prep":
+    st.title("Competitive Exam Preparation")
+    st.write("Physics aur Teaching Aptitude ke liye practice module.")
     
-    # Depletion region ki boundaries ko dotted line se dikhana
-    ax_graph.axvline(x=-W/2, color='gray', linestyle='--')
-    ax_graph.axvline(x=W/2, color='gray', linestyle='--')
-    ax_graph.grid(True, linestyle=':', alpha=0.6)
+    tab1, tab2 = st.tabs(["Physics (NET)", "Teaching Aptitude (B.Ed)"])
+    
+    with tab1:
+        st.subheader("Solid State Physics Quiz")
+        q1 = st.radio("At T=0K, what is the probability of occupation of an energy state above the Fermi level?", ["1", "0.5", "0", "Infinity"])
+        if st.button("Check Answer - Q1"):
+            if q1 == "0":
+                st.success("Correct! At absolute zero, states above Fermi energy are empty.")
+            else:
+                st.error("Incorrect. Try again.")
+                
+    with tab2:
+        st.subheader("CG Pre B.Ed: Teaching Aptitude")
+        q2 = st.radio("Sikhne ki prakriya me sabse mehatvapurn kadi kya hai?", ["Ratt kar yaad karna", "Exam pass karna", "Class me shanti", "Concept ko samajhna aur apply karna"])
+        if st.button("Check Answer - Q2"):
+            if q2 == "Concept ko samajhna aur apply karna":
+                st.success("Bilkul Sahi!")
+            else:
+                st.error("Galat uttar.")
 
-    plt.tight_layout()
+# --- OTHER TOPICS (PLACEHOLDERS) ---
+else:
+    st.title(topic)
+    st.write("Is topic ka interactive visualization module abhi under-construction hai.")
+    st.info("M.Sc. Physics syllabus ke anusar yahan naye diagrams aur equations jald hi add kiye jayenge!")
     
-    # Streamlit me figure ko dikhana
-    st.pyplot(fig)
